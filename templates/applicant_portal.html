@@ -46,7 +46,7 @@
 
         <!-- AI Screening Results -->
         <div class="mb-6 border rounded-lg p-4 bg-blue-50 border-blue-200">
-            <h2 class="text-lg font-semibold mb-3 text-blue-900">📊 AI Screening Results</h2>
+            <h2 class="text-lg font-semibold mb-3 text-blue-900">AI Screening Results</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
                 <div class="bg-white p-3 rounded border border-blue-200">
@@ -80,9 +80,9 @@
             <div class="flex items-center gap-3">
                 <div class="text-3xl">
                     {% if application.resume_score >= 60 %}
-                    ✅
+                    ✓
                     {% else %}
-                    ❌
+                    ✗
                     {% endif %}
                 </div>
                 <div class="flex-1">
@@ -122,6 +122,7 @@
             Thank you for your application. Unfortunately, your profile does not meet our current requirements.
             We encourage you to apply again in the future after gaining more experience.
         </p>
+        {% endif %}
         {% endif %}
 
         {% if not application %}
