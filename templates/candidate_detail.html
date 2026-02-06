@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="grid grid-cols-3 gap-6">
+    <!-- Main Candidate Info -->
+    <div class="col-span-2 bg-white p-6 rounded shadow space-y-4">
+        <div class="flex justify-between items-start">
+            <div>
+                <h2 class="text-2xl font-bold">{{ candidate.name }}</h2>
+                <p class="text-sm text-gray-500">{{ candidate.email }}</p>
+            </div>
+            <span class="px-3 py-1 rounded text-white 
+                {% if candidate.status == 'approved' %}bg-green-600
+                {% elif candidate.status == 'rejected' %}bg-red-600
+                {% else %}bg-blue-600{% endif %}">
+                {{ candidate.status | capitalize }}
+            </span>
+        </div>
+
+        <hr class="my-4">
+
+        <!-- Score Metrics -->
+        <div class="grid grid-cols-4 gap-4">
+            <div class="bg-blue-50 p-4 rounded">
+                <div class="text-xs text-gray-500">Overall Score</div>
+                <div class="text-2xl font-bold">{{ candidate.score }}<span class="text-sm">/100</span></div>
+            </div>
+            <div class="bg-green-50 p-4 rounded">
+                <div class="text-xs text-gray-500">Resume Score</div>
+                <div class="text-2xl font-bold">{{ candidate.resume_score }}<span class="text-sm">/100</span></div>
+            </div>
+            <div class="bg-purple-50 p-4 rounded">
+                <div class="text-xs text-gray-500">Coding Score</div>
+                <div class="text-2xl font-bold">{{ candidate.coding_score }}<span class="text-sm">/100</span></div>
+            </div>
+            <div class="bg-indigo-50 p-4 rounded">
+                <div class="text-xs text-gray-500">AI Score</div>
+                <div class="text-2xl font-bold">
+                    {{ candidate.ai_score if candidate.ai_score is not none else candidate.score }}
+                    <span class="text-sm">/100</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Stage -->
+        <div class="bg-gray-50 p-4 rounded">
+            <div class="text-sm text-gray-500 mb-1">Current Stage</div>
+            <div class="text-lg font-semibold">{{ candidate.stage }}</div>
+            <div class="text-xs text-gray-500 mt-2">Confidence: {{ candidate.confidence }}</div>
+        </div>
+
+        <!-- AI Explanation -->
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+            <b class="text-yellow-900">AI Verdict</b><br>
+            <p class="text-sm text-yellow-800 mt-2">
+                {{ candidate.ai_verdict or "No AI verdict available yet." }}
+            </p>
+        </div>
+
+        <!-- Assessment Status -->
+        <div class="bg-blue-50 p-4 rounded">
+            <div class="text-sm font-semibold text-blue-900 mb-2">Assessment Status</div>
+            {% if candidate.assessment_status == 'completed' %}
+                <p class="text-green-600">✓ Completed - {{ candidate.response_timestamp }}</p>
+                <div class="bg-white border border-gray-200 p-3 mt-2 rounded text-sm max-h-24 overflow-y-auto">
+                    <b>Response:</b><br>{{ candidate.assessment_response[:200] }}...
+                </div>
+            {% elif candidate.assessment_status == 'in_progress' %}
+                <p class="text-yellow-600">⏳ In Progress</p>
+            {% else %}
+                <p class="text-gray-600">Not Started</p>
+            {% endif %}
+        </div>
+
+        <!-- Decision Status -->
+        <div class="bg-gray-50 p-4 rounded">
+            <div class="text-sm font-semibold mb-2">Current Status</div>
+            <span class="inline-block px-3 py-1 rounded text-white {% if candidate.status == 'approved' %}bg-green-600{% elif candidate.status == 'rejected' %}bg-red-600{% else %}bg-gray-400{% endif %}">
+                {{ candidate.status | upper }}
+            </span>
+            {% if candidate.status != 'pending' and candidate.decision_reason %}
+                <p class="text-sm text-gray-600 mt-2"><b>Reason:</b> {{ candidate.decision_reason }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Action Sidebar -->
+    <div class="bg-white p-6 rounded shadow space-y-3 h-fit sticky top-6">
+        <h3 class="font-bold text-lg mb-4">Actions</h3>
+
+        <!-- Launch Assessment Button -->
+        <a href="/assessment/{{ candidate.id }}" class="block w-full bg-blue-600 text-white px-4 py-3 rounded text-center font-semibold hover:bg-blue-700 transition">
+            📝 Launch Assessment
+        </a>
+
+        <!-- Approve Form -->
+        <form method="POST" action="/candidate/{{ candidate.id }}/approve" class="space-y-2">
+            <textarea name="override_reason" placeholder="Approval reason (optional)" class="w-full border p-2 rounded text-sm h-20 hidden"></textarea>
+            <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 rounded font-semibold hover:bg-green-700 transition">
+                ✓ Approve
+            </button>
+        </form>
+
+        <!-- Reject Form -->
+        <form method="POST" action="/candidate/{{ candidate.id }}/reject" class="space-y-2">
+            <textarea name="override_reason" placeholder="Rejection reason (optional)" class="w-full border p-2 rounded text-sm h-20 hidden"></textarea>
+            <button type="submit" class="w-full bg-red-600 text-white px-4 py-2 rounded font-semibold hover:bg-red-700 transition" onclick="return confirm('Are you sure?')">
+                ✗ Reject
+            </button>
+        </form>
+
+        <!-- Back Button -->
+        <a href="/candidates" class="block w-full bg-gray-300 text-gray-700 px-4 py-2 rounded text-center font-semibold hover:bg-gray-400 transition">
+            ← Back to Candidates
+        </a>
+    </div>
+</div>
+
+{% endblock %}

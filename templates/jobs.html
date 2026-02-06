@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Page Header -->
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-800">AI Pipeline Generator</h1>
+    <p class="text-gray-600 mt-1">Create job postings and generate AI-optimized hiring pipelines</p>
+</div>
+
+<div class="grid grid-cols-3 gap-6">
+    <!-- Job Creation Form -->
+    <div class="col-span-2">
+        <div class="bg-white p-8 rounded-lg shadow">
+            <h2 class="text-xl font-bold text-gray-800 mb-6">Create New Job</h2>
+
+            <form method="POST" class="space-y-5">
+                <!-- Role Title -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-gray-700">Role Title</label>
+                    <input 
+                        type="text"
+                        name="role_title"
+                        placeholder="e.g., Senior Backend Engineer"
+                        class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value="{{ role_title or '' }}"
+                        required
+                    >
+                </div>
+
+                <!-- Experience Level -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-gray-700">Experience Level</label>
+                    <select name="level" class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="Junior" {% if level == 'Junior' %}selected{% endif %}>Junior (0-2 years)</option>
+                        <option value="Mid" {% if level == 'Mid' %}selected{% endif %}>Mid-Level (2-5 years)</option>
+                        <option value="Senior" {% if level == 'Senior' %}selected{% endif %}>Senior (5+ years)</option>
+                    </select>
+                    <p class="text-xs text-gray-500">This determines the pipeline complexity and assessment difficulty</p>
+                </div>
+
+                <!-- Required Skills -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-gray-700">Required Skills</label>
+                    <input 
+                        type="text"
+                        name="skills"
+                        placeholder="e.g., Python, FastAPI, SQL, Docker (comma-separated)"
+                        class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value="{{ skills or '' }}"
+                    >
+                </div>
+
+                <!-- Risk Tolerance Slider -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-gray-700">Risk Tolerance</label>
+                    <div class="flex gap-4 items-center">
+                        <input 
+                            type="range"
+                            name="risk_tolerance"
+                            min="0"
+                            max="100"
+                            value="50"
+                            class="flex-1"
+                            oninput="updateLabel(this.value)"
+                        >
+                        <span class="px-4 py-2 bg-gray-100 rounded text-sm font-semibold text-gray-700 min-w-fit" id="riskLabel">50%</span>
+                    </div>
+                    <p class="text-xs text-gray-500">
+                        <strong>Low (0-30%):</strong> Strict screening, fewer candidates
+                        <br><strong>Medium (30-70%):</strong> Balanced approach
+                        <br><strong>High (70-100%):</strong> Inclusive, more candidates
+                    </p>
+                </div>
+
+                <!-- Submit Button -->
+                <button 
+                    type="submit"
+                    class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition mt-8"
+                >
+                    🔧 Generate Pipeline
+                </button>
+            </form>
+
+            <script>
+                function updateLabel(value) {
+                    document.getElementById('riskLabel').textContent = value + '%';
+                }
+            </script>
+        </div>
+    </div>
+
+    <!-- Generated Pipeline Display -->
+    <div class="col-span-1">
+        {% if pipeline %}
+        <div class="bg-white p-6 rounded-lg shadow sticky top-24">
+            <h3 class="font-bold text-lg text-gray-800 mb-4">📋 Generated Pipeline</h3>
+            
+            <div class="space-y-3">
+                {% for step in pipeline %}
+                <div class="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+                    <div class="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                        {{ loop.index }}
+                    </div>
+                    <div class="flex-1">
+                        <div class="text-sm font-semibold text-gray-800">{{ step }}</div>
+                        <div class="text-xs text-gray-500">
+                            {% if step == 'Resume' %}
+                                Initial screening
+                            {% elif step == 'Coding' %}
+                                Technical assessment
+                            {% elif step == 'System Design' %}
+                                Architecture evaluation
+                            {% elif step == 'Behavioral' %}
+                                Cultural fit
+                            {% elif step == 'Negotiation' %}
+                                Offer discussion
+                            {% elif step == 'Final' %}
+                                Onboarding prep
+                            {% else %}
+                                Evaluation step
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="mt-6 pt-4 border-t text-xs text-gray-600">
+                <p>💡 <strong>Tip:</strong> This pipeline will be applied to all incoming candidates for this role.</p>
+            </div>
+        </div>
+        {% else %}
+        <div class="bg-blue-50 border-2 border-dashed border-blue-300 p-6 rounded-lg text-center">
+            <p class="text-2xl mb-2">⚙️</p>
+            <p class="text-sm font-semibold text-gray-700">No pipeline generated yet</p>
+            <p class="text-xs text-gray-600 mt-2">Fill in the form and click "Generate Pipeline" to create a custom evaluation workflow</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

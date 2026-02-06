@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hiring Assistant - Choose Role</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="max-w-4xl w-full mx-4 bg-white rounded-xl shadow-lg p-8">
+        <h1 class="text-2xl font-bold text-center mb-2">Welcome to the AI Hiring Assistant</h1>
+        <p class="text-gray-600 text-center mb-8">Choose how you want to continue</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Admin (HR) side -->
+            <div class="border rounded-lg p-6 flex flex-col justify-between">
+                <div>
+                    <h2 class="text-xl font-semibold mb-2">Admin / HR</h2>
+                    <p class="text-gray-600 text-sm mb-4">
+                        Log in as an admin to view the hiring dashboard, review candidates,
+                        and manage the full interview pipeline.
+                    </p>
+                    <ul class="text-gray-500 text-sm list-disc pl-5 space-y-1 mb-4">
+                        <li>Access analytics dashboard</li>
+                        <li>Review and shortlist candidates</li>
+                        <li>Launch and track assessments</li>
+                    </ul>
+                </div>
+                <div class="mt-4">
+                    <a href="{{ url_for('admin_login') }}"
+                       class="inline-flex w-full items-center justify-center px-4 py-2 bg-black text-white rounded-md hover:bg-gray-900 transition">
+                        Admin Login
+                    </a>
+                </div>
+            </div>
+
+            <!-- Applicant side -->
+            <div class="border rounded-lg p-6 flex flex-col justify-between bg-gray-50">
+                <div>
+                    <h2 class="text-xl font-semibold mb-2">Applicant</h2>
+                    <p class="text-gray-600 text-sm mb-4">
+                        Create your applicant profile, upload your resume, and track your
+                        hiring progress in one place.
+                    </p>
+                    <ul class="text-gray-500 text-sm list-disc pl-5 space-y-1 mb-4">
+                        <li>Create an applicant account</li>
+                        <li>Upload your resume / CV</li>
+                        <li>See your application status & stage</li>
+                    </ul>
+                </div>
+                <div class="mt-4">
+                    <a href="{{ url_for('applicant_portal') }}"
+                       class="inline-flex w-full items-center justify-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition">
+                        Go to Applicant Portal
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

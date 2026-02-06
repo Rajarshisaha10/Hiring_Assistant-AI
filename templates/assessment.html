@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white p-8 rounded shadow">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6 pb-4 border-b">
+            <div>
+                <h1 class="text-2xl font-bold">Assessment</h1>
+                <p class="text-gray-600 text-sm">{{ candidate.name }} • {{ candidate.stage }} Round</p>
+            </div>
+            <div class="text-right">
+                <div class="text-2xl font-bold text-blue-600">25:00</div>
+                <p class="text-xs text-gray-500">Time Remaining</p>
+            </div>
+        </div>
+
+        <!-- Question -->
+        <div class="bg-blue-50 border-l-4 border-blue-400 p-6 rounded mb-6">
+            <div class="text-sm text-blue-600 font-semibold mb-2">Question</div>
+            <div class="text-lg font-semibold text-gray-800">{{ question.question }}</div>
+            <div class="flex gap-2 mt-3">
+                <span class="text-xs bg-blue-200 text-blue-800 px-2 py-1 rounded">{{ question.type | upper }}</span>
+                <span class="text-xs bg-orange-200 text-orange-800 px-2 py-1 rounded">{{ question.difficulty }}</span>
+            </div>
+        </div>
+
+        <!-- Assessment Form -->
+        <form method="POST" action="/assessment/{{ candidate_id }}" class="space-y-6">
+            <!-- Answer textarea -->
+            <div class="space-y-3">
+                <label class="block text-sm font-semibold text-gray-700">Your Answer</label>
+                <textarea 
+                    name="answer"
+                    placeholder="Enter your answer here. Provide detailed explanation of your approach, reasoning, and implementation details."
+                    class="w-full border border-gray-300 p-4 rounded text-base h-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                ></textarea>
+                <p class="text-xs text-gray-500">Min: 50 characters • Max: 5000 characters</p>
+            </div>
+
+            <!-- Progress bar (mock) -->
+            <div class="space-y-2">
+                <div class="flex justify-between text-xs text-gray-600">
+                    <span>Progress</span>
+                    <span>1 of 1</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="bg-blue-600 h-2 rounded-full" style="width: 100%"></div>
+                </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="flex gap-3 justify-end pt-6 border-t">
+                <a href="/candidate/{{ candidate_id }}" class="px-6 py-2 border border-gray-300 rounded text-gray-700 font-semibold hover:bg-gray-50 transition">
+                    Cancel
+                </a>
+                <button 
+                    type="submit"
+                    class="px-8 py-2 bg-blue-600 text-white rounded font-semibold hover:bg-blue-700 transition"
+                    onclick="return confirm('Submit your assessment? You cannot change it after submission.')">
+                    Submit Assessment
+                </button>
+            </div>
+        </form>
+
+        <!-- Info Box -->
+        <div class="mt-8 bg-gray-50 p-4 rounded text-sm text-gray-600 border-l-4 border-gray-300">
+            <p><b>Tips:</b></p>
+            <ul class="list-disc list-inside mt-2 space-y-1">
+                <li>Read the question carefully and take time to think through your approach</li>
+                <li>Provide clear, detailed explanations of your reasoning</li>
+                <li>Show your work step-by-step for technical questions</li>
+                <li>You can paste code snippets if needed (use readable formatting)</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

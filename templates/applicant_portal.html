@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Applicant Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-2xl mx-4 bg-white rounded-xl shadow-lg p-8">
+        <div class="flex items-center justify-between mb-4">
+            <h1 class="text-2xl font-bold">Applicant Portal</h1>
+            <a href="{{ url_for('role_selection') }}" class="text-sm text-indigo-600 hover:underline">
+                &larr; Back
+            </a>
+        </div>
+
+        {% if application %}
+        <div class="mb-6 border rounded-lg p-4 bg-green-50 border-green-200">
+            <h2 class="text-lg font-semibold mb-1">Application Submitted</h2>
+            <p class="text-sm text-gray-700 mb-2">
+                Thank you, {{ application.name }}. Your application has been received and
+                is now in our hiring pipeline.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm mb-4">
+                <div>
+                    <span class="font-medium text-gray-600">Email:</span>
+                    <span class="ml-1 text-gray-800">{{ application.email }}</span>
+                </div>
+                <div>
+                    <span class="font-medium text-gray-600">Status:</span>
+                    <span class="ml-1 text-green-700 font-semibold">{{ application.status }}</span>
+                </div>
+                <div>
+                    <span class="font-medium text-gray-600">Current Stage:</span>
+                    <span class="ml-1 text-gray-800">{{ application.stage }}</span>
+                </div>
+                {% if application.resume_filename %}
+                <div>
+                    <span class="font-medium text-gray-600">Resume:</span>
+                    <span class="ml-1 text-gray-800">{{ application.resume_filename }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- AI Screening Results -->
+        <div class="mb-6 border rounded-lg p-4 bg-blue-50 border-blue-200">
+            <h2 class="text-lg font-semibold mb-3 text-blue-900">📊 AI Screening Results</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                <div class="bg-white p-3 rounded border border-blue-200">
+                    <div class="text-xs text-gray-600 font-medium">Resume Score</div>
+                    <div class="text-2xl font-bold text-blue-600 mt-1">{{ application.resume_score }}<span
+                            class="text-sm">/100</span></div>
+                    <div class="text-xs text-gray-500 mt-1">AI resume analysis</div>
+                </div>
+                <div class="bg-white p-3 rounded border border-blue-200">
+                    <div class="text-xs text-gray-600 font-medium">Current AI Score</div>
+                    <div class="text-2xl font-bold text-indigo-600 mt-1">{{ application.ai_score }}<span
+                            class="text-sm">/100</span></div>
+                    <div class="text-xs text-gray-500 mt-1">Overall assessment</div>
+                </div>
+                <div class="bg-white p-3 rounded border border-blue-200">
+                    <div class="text-xs text-gray-600 font-medium">Assessment Stage</div>
+                    <div class="text-lg font-bold text-purple-600 mt-1">{{ application.stage }}</div>
+                    <div class="text-xs text-gray-500 mt-1">Next evaluation phase</div>
+                </div>
+            </div>
+
+            <div class="bg-white p-3 rounded border border-blue-200">
+                <div class="text-xs font-semibold text-gray-600 uppercase mb-2">AI Verdict</div>
+                <p class="text-sm text-gray-700">{{ application.ai_verdict }}</p>
+            </div>
+        </div>
+
+        <!-- AI DECISION: SELECTED OR REJECTED -->
+        <div
+            class="mb-4 p-4 rounded-lg border-2 {% if application.resume_score >= 60 %}bg-green-50 border-green-500{% else %}bg-red-50 border-red-500{% endif %}">
+            <div class="flex items-center gap-3">
+                <div class="text-3xl">
+                    {% if application.resume_score >= 60 %}
+                    ✅
+                    {% else %}
+                    ❌
+                    {% endif %}
+                </div>
+                <div class="flex-1">
+                    <div
+                        class="font-bold text-xl {% if application.resume_score >= 60 %}text-green-800{% else %}text-red-800{% endif %}">
+                        {% if application.resume_score >= 60 %}
+                        SELECTED - Proceed to Coding Round
+                        {% else %}
+                        NOT SELECTED - Below Threshold
+                        {% endif %}
+                    </div>
+                    <div class="text-sm text-gray-700 mt-1">
+                        {% if application.resume_score >= 60 %}
+                        Your resume meets our requirements. Please complete the coding assessment below.
+                        {% else %}
+                        Your resume score ({{ application.resume_score }}/100) is below our minimum threshold of 60. We
+                        appreciate your interest.
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if application.resume_score >= 60 %}
+        <p class="text-sm text-gray-600 mb-4">
+            Based on your resume AI screening, you will now proceed to the coding assessment.
+            This helps us evaluate technical skills and problem-solving ability. Our hiring team
+            will review your complete profile and reach out with next steps.
+        </p>
+
+        <a href="{{ url_for('applicant_coding', applicant_id=application.id) }}"
+            class="block w-full bg-indigo-600 text-white text-center py-3 rounded-md hover:bg-indigo-700 transition font-medium">
+            Continue to Coding Assessment →
+        </a>
+        {% else %}
+        <p class="text-sm text-gray-600 mb-4">
+            Thank you for your application. Unfortunately, your profile does not meet our current requirements.
+            We encourage you to apply again in the future after gaining more experience.
+        </p>
+        {% endif %}
+
+        {% if not application %}
+        <form method="POST" enctype="multipart/form-data" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Full Name</label>
+                    <input class="w-full p-2.5 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                        type="text" name="name" placeholder="Your full name" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Email</label>
+                    <input class="w-full p-2.5 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                        type="email" name="email" placeholder="you@example.com" required>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Upload Resume / CV</label>
+                <input class="w-full text-sm border rounded-md p-2 bg-gray-50" type="file" name="resume"
+                    accept=".pdf,.doc,.docx,.txt" required>
+                <p class="text-xs text-gray-500 mt-1">
+                    Accepted formats: PDF, DOC, DOCX, TXT
+                </p>
+            </div>
+
+            <button type="submit"
+                class="w-full bg-indigo-600 text-white py-2.5 rounded-md hover:bg-indigo-700 transition">
+                Submit Application
+            </button>
+        </form>
+        {% endif %}
+    </div>
+</body>
+
+</html>

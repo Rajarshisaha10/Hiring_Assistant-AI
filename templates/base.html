@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Hiring Orchestrator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+<div class="flex min-h-screen">
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-white shadow-lg fixed h-screen overflow-y-auto">
+        <!-- Logo/Brand -->
+        <div class="p-6 border-b">
+            <div class="font-bold text-2xl text-blue-600">🤖 AI Hiring</div>
+            <p class="text-xs text-gray-500 mt-1">Orchestrator MVP</p>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="space-y-2 px-4 py-6">
+            <!-- Dashboard Link -->
+            <a href="/dashboard" class="block p-3 rounded hover:bg-gray-100 transition text-gray-700 font-medium {% if request.path == '/dashboard' %}bg-blue-50 text-blue-600 border-r-4 border-blue-600{% endif %}">
+                📊 Dashboard
+            </a>
+
+            <!-- Jobs Link -->
+            <a href="/jobs" class="block p-3 rounded hover:bg-gray-100 transition text-gray-700 font-medium {% if request.path == '/jobs' %}bg-blue-50 text-blue-600 border-r-4 border-blue-600{% endif %}">
+                💼 Jobs
+            </a>
+
+            <!-- Candidates Link -->
+            <a href="/candidates" class="block p-3 rounded hover:bg-gray-100 transition text-gray-700 font-medium {% if request.path == '/candidates' %}bg-blue-50 text-blue-600 border-r-4 border-blue-600{% endif %}">
+                👥 Candidates
+            </a>
+
+            <!-- Assessments Link -->
+            <a href="/assessments" class="block p-3 rounded hover:bg-gray-100 transition text-gray-700 font-medium {% if request.path == '/assessments' %}bg-blue-50 text-blue-600 border-r-4 border-blue-600{% endif %}">
+                📝 Assessments
+            </a>
+        </nav>
+
+        <!-- Footer / Logout -->
+        <div class="absolute bottom-6 left-4 right-4 pt-4 border-t">
+            <a href="/" class="block text-center px-4 py-2 bg-red-50 text-red-600 rounded font-semibold hover:bg-red-100 transition text-sm">
+                🚪 Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 ml-64">
+        <!-- Top Navigation Bar -->
+        <header class="bg-white shadow sticky top-0 z-40">
+            <div class="flex justify-between items-center px-8 py-4">
+                <h1 class="text-xl font-bold text-gray-800">AI Hiring Orchestrator</h1>
+                <div class="flex items-center gap-4">
+                    <span class="text-sm font-medium text-gray-600">👤 Admin User</span>
+                    <span class="text-xs px-3 py-1 bg-green-100 text-green-700 rounded-full">● Online</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <section class="p-8">
+            {% block content %}{% endblock %}
+        </section>
+    </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-md mx-4 bg-white rounded-xl shadow-lg p-8">
+        <h1 class="text-2xl font-bold text-center mb-2">Admin Login</h1>
+        <p class="text-gray-600 text-center mb-6 text-sm">
+            Sign in to access the hiring dashboard and manage candidates.
+        </p>
+
+        <form method="POST" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-1">Email</label>
+                <input
+                    class="w-full p-2.5 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+                    type="email"
+                    name="email"
+                    placeholder="admin@example.com"
+                    required
+                >
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Password</label>
+                <input
+                    class="w-full p-2.5 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+                    type="password"
+                    name="password"
+                    placeholder="••••••••"
+                    required
+                >
+            </div>
+
+            <button
+                type="submit"
+                class="w-full bg-black text-white py-2.5 rounded-md hover:bg-gray-900 transition"
+            >
+                Login
+            </button>
+        </form>
+
+        <div class="mt-4 text-center">
+            <a href="{{ url_for('role_selection') }}" class="text-sm text-indigo-600 hover:underline">
+                &larr; Back to role selection
+            </a>
+        </div>
+    </div>
+</body>
+</html>
+

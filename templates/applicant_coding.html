@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Applicant Coding Round</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-4xl bg-white rounded-xl shadow-lg p-8">
+
+        <!-- HEADER -->
+        <div class="flex items-center justify-between mb-4">
+            <h1 class="text-2xl font-bold">Coding Round</h1>
+            <a href="{{ url_for('role_selection') }}" class="text-sm text-indigo-600 hover:underline">
+                &larr; Exit
+            </a>
+        </div>
+
+
+        <!-- SCORE CARDS -->
+        <div class="mb-4 grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+
+            <div class="p-3 rounded-lg bg-gray-50 border">
+                <div class="text-gray-500 text-xs uppercase">Resume Score</div>
+                <div class="text-xl font-semibold">{{ resume_score }}/100</div>
+            </div>
+
+            <div class="p-3 rounded-lg bg-gray-50 border">
+                <div class="text-gray-500 text-xs uppercase">Coding Score</div>
+                <div class="text-xl font-semibold">
+                    {% if coding_score is not none %}
+                    {{ coding_score }}/100
+                    {% else %}
+                    Pending
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="p-3 rounded-lg bg-indigo-50 border border-indigo-200">
+                <div class="text-gray-500 text-xs uppercase">AI Score (Combined)</div>
+                <div class="text-xl font-semibold">
+                    {% if ai_score is not none %}
+                    {{ ai_score }}/100
+                    {% else %}
+                    —
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- =============================== -->
+        <!-- MAIN PHASE SWITCH -->
+        <!-- =============================== -->
+
+        {% if coding_score is none %}
+
+        <!-- =============================== -->
+        <!-- SUBMISSION PHASE -->
+        <!-- =============================== -->
+
+        <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded">
+            <p class="text-sm font-semibold text-blue-900">
+                📝 {{ questions|length }} Coding Problems Selected
+            </p>
+            <p class="text-xs text-gray-600 mt-1">
+                Based on your resume score, we've selected {{ questions|length }} coding problem(s) for you.
+                Write Python solutions. Code will be auto-tested against multiple test cases.
+            </p>
+        </div>
+
+        <form method="POST" class="space-y-8">
+
+            {% for q in questions %}
+            <div class="border rounded-lg p-6 bg-gray-50">
+
+                <h2 class="font-bold text-lg mb-2">
+                    Q{{ loop.index }}. {{ q.title }}
+                </h2>
+
+                <p class="text-xs text-gray-500 mb-3">Problem ID: {{ q.id }}</p>
+
+                <div class="mb-3 text-sm text-gray-700 whitespace-pre-wrap">
+                    {{ q.description }}
+                </div>
+
+                {% if q.function_signature %}
+                <div class="mb-3 bg-gray-800 text-white p-2 rounded font-mono text-xs">
+                    {{ q.function_signature }}
+                </div>
+                {% endif %}
+
+                <!-- TEST CASES -->
+                <div class="mb-3">
+                    <div class="text-xs font-semibold text-gray-600 mb-1">
+                        Test Cases ({{ q.test_cases|length }}):
+                    </div>
+                    <div class="text-xs space-y-1">
+                        {% for test_case in q.test_cases %}
+                        <div class="bg-white p-2 rounded border">
+                            <b>Test {{ loop.index }}:</b>
+                            <b>Input:</b> {{ test_case.input }} |
+                            <b>Expected:</b> {{ test_case.output }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- CODE AREA -->
+                <textarea name="answer_{{ q.id }}" class="w-full h-32 font-mono border rounded p-3" required></textarea>
+
+            </div>
+            {% endfor %}
+
+            <button class="w-full bg-indigo-600 text-white py-3 rounded">
+                Submit & Execute
+            </button>
+
+        </form>
+
+
+
+        {% else %}
+
+
+
+        <!-- =============================== -->
+        <!-- RESULTS PHASE -->
+        <!-- =============================== -->
+
+        <div class="mb-6 border rounded-lg p-4 bg-green-50 border-green-200">
+            <h2 class="font-semibold text-green-800">✓ Coding Round Completed</h2>
+        </div>
+
+
+        <!-- TEST SUMMARY -->
+        <div class="mb-6 grid grid-cols-3 gap-3 text-center">
+
+            <div>
+                <div class="text-xs text-gray-500">Total</div>
+                {% if test_results %}{{ test_results|length }}{% else %}0{% endif %}
+            </div>
+
+            <div>
+                <div class="text-xs text-gray-500">Passed</div>
+                {% set passed = test_results|selectattr('passed')|list %}
+                {{ passed|length }}
+            </div>
+
+            <div>
+                <div class="text-xs text-gray-500">Failed</div>
+                {% set failed = test_results|rejectattr('passed')|list %}
+                {{ failed|length }}
+            </div>
+
+        </div>
+
+
+
+        <!-- DETAILED RESULTS -->
+        {% if test_results %}
+        <div class="space-y-3">
+
+            {% for result in test_results %}
+            <div class="border p-3 rounded {% if result.passed %}bg-green-50{% else %}bg-red-50{% endif %}">
+
+                <b>{{ result.title }}</b> —
+                {% if result.passed %}PASSED{% else %}FAILED{% endif %}
+
+                <div class="text-xs mt-1">
+                    Expected: {{ result.expected }} |
+                    Got: {{ result.output }}
+                </div>
+
+                {% if result.error %}
+                <div class="text-red-600 text-xs">{{ result.error }}</div>
+                {% endif %}
+
+            </div>
+            {% endfor %}
+
+        </div>
+        {% endif %}
+
+
+
+        <!-- NEXT STEPS -->
+        <div class="mt-6 border rounded p-4 bg-blue-50">
+            <p class="text-sm">
+                Resume score: {{ resume_score }}/100,
+                Coding score: {{ coding_score }}/100,
+                AI score: {{ ai_score }}/100.
+                HR team will contact you soon.
+            </p>
+        </div>
+
+
+        {% endif %}
+        <!-- END coding_score block -->
+
+
+    </div>
+
+</body>
+
+</html>
