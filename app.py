@@ -3,14 +3,25 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 from typing import Optional
 import os
+import logging
+
+# Import configuration
+from config import CONFIG, setup_logging
+
+# Setup logging
+logger = setup_logging()
 
 from project.question_selector import select_questions
 from project.judge import score_resume, score_coding_answers
 
 
 app = Flask(__name__)
-app.secret_key = "hiring-orchestrator-secret-key"
-app.config["UPLOAD_FOLDER"] = "resume"
+app.config.from_object(CONFIG)
+
+# Ensure upload folder exists
+os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
+
+logger.info(f"Flask app initialized with {os.getenv('FLASK_ENV', 'development')} configuration")
 
 
 # =========================================================
@@ -337,15 +348,38 @@ def assessments():
 
 
 # =========================================================
-# ERROR HANDLERS (debug friendly)
+# ERROR HANDLERS
 # =========================================================
+
+@app.errorhandler(400)
+def bad_request(e):
+    logger.warning(f"Bad request: {e}")
+    return render_template('error.html', error="Bad Request", message="Invalid request"), 400
+
+
+@app.errorhandler(404)
+def not_found(e):
+    logger.warning(f"Page not found: {request.path}")
+    return render_template('error.html', error="Not Found", message="The requested page does not exist"), 404
+
 
 @app.errorhandler(500)
 def server_error(e):
-    return f"Server Error: {e}", 500
+    logger.error(f"Server error: {e}", exc_info=True)
+    if CONFIG.DEBUG:
+        return f"Server Error: {e}", 500
+    return render_template('error.html', error="Server Error", message="An unexpected error occurred"), 500
 
 
 # =========================================================
+# ENTRY POINT
+# =========================================================
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    logger.info("Starting Hiring Assistant Application")
+    app.run(
+        host=CONFIG.HOST,
+        port=CONFIG.PORT,
+        debug=CONFIG.DEBUG,
+        use_reloader=True
+    )
