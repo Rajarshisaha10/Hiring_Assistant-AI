@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "question": "Tell us about a time when you had to handle a conflict with a team member. How did you resolve it?",
+    "category": "teamwork",
+    "type": "behavioral"
+  },
+  {
+    "id": 2,
+    "question": "Describe a project where you took the lead. What challenges did you face and how did you overcome them?",
+    "category": "leadership",
+    "type": "behavioral"
+  },
+  {
+    "id": 3,
+    "question": "What attracted you to this role and our company? How do your skills align with our needs?",
+    "category": "motivation",
+    "type": "cultural-fit"
+  },
+  {
+    "id": 4,
+    "question": "How do you stay updated with the latest technologies and trends in your field?",
+    "category": "learning",
+    "type": "behavioral"
+  },
+  {
+    "id": 5,
+    "question": "Share an example of how you handled tight deadlines and competing priorities.",
+    "category": "time-management",
+    "type": "behavioral"
+  },
+  {
+    "id": 6,
+    "question": "Tell us about a time you failed. What did you learn from it?",
+    "category": "resilience",
+    "type": "behavioral"
+  },
+  {
+    "id": 7,
+    "question": "How would you approach learning a new technology required for this role?",
+    "category": "adaptability",
+    "type": "behavioral"
+  },
+  {
+    "id": 8,
+    "question": "Describe your ideal work environment and how you collaborate with diverse teams.",
+    "category": "collaboration",
+    "type": "cultural-fit"
+  }
+]

@@ -1,0 +1,109 @@
+.candidate-list-container {
+    min-height: 100vh;
+    padding: 24px;
+    animation: fadeIn 0.6s ease;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 24px 32px;
+    border-radius: 16px;
+    margin-bottom: 32px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.page-header h1 {
+    font-size: 2rem;
+    color: var(--dark);
+}
+
+.back-btn {
+    background: transparent;
+    color: var(--gray);
+    border: 1px solid var(--border);
+}
+
+.back-btn:hover {
+    background: var(--light);
+    color: var(--dark);
+}
+
+.candidates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.candidate-card {
+    background: white;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-left: 4px solid var(--primary);
+}
+
+.candidate-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.candidate-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.candidate-header h3 {
+    font-size: 1.25rem;
+    color: var(--dark);
+}
+
+.candidate-email {
+    color: var(--gray);
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+}
+
+.candidate-scores {
+    display: flex;
+    gap: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+
+.candidate-scores .score-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.candidate-scores .score-item span {
+    font-size: 0.875rem;
+    color: var(--gray);
+}
+
+.candidate-scores .score-item strong {
+    font-size: 1.5rem;
+    color: var(--dark);
+}
+
+.candidate-scores .score-item.highlight strong {
+    color: var(--primary);
+}
+
+@media (max-width: 768px) {
+    .candidates-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .page-header {
+        flex-direction: column;
+        gap: 16px;
+    }
+}
