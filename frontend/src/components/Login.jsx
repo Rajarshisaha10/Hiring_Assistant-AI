@@ -47,7 +47,7 @@ function Login({ setUserRole }) {
                         </div>
 
                         <div
-                            className="role-card applicant-card"
+                            className="role-card applicant"
                             onClick={() => handleRoleSelect('applicant')}
                         >
                             <div className="role-icon">👨‍💻</div>
